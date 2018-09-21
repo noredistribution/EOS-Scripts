@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#Crashing agents can fill up the /var/log partition in EOS. Each time the agent crashes
+#the process manager will restart it and a new log file will be created for the new pid
+#This script cleans up the /var/log/agents/ directory
 #Note: run the script with sudo
 
 from __future__ import print_function,unicode_literals
@@ -35,9 +38,10 @@ for line in sub_proc.stdout:
 
 
 #check if the PID from agent_name-<PID> is active in the running processes list
-#and if not delete the log file if it's older than 10 minutes
+#and if not delete the log file if it's older than 10 minutes <- this can be changed
 #large log files will logrotate and will have the format of <agentname>-<pid>.<rotation_number>.gz
 #check for files that end in .gz and only delete them if the pid is not active
+#it's recommended to keep at least 2-3 log files in case the latest one doesn't contain the full traces
 
 current_time = time.time()
 
